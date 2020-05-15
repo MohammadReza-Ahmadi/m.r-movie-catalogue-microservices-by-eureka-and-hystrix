@@ -24,10 +24,16 @@ public class UserRatingService {
 
     @HystrixCommand(fallbackMethod = "getFallbackUserRating",
             commandProperties = {
+                    /* Circuit breaker pattern properties*/
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "20"),
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "8000"),
+
+                    /* Bulkhead pattern properties*/
+                    @HystrixProperty(name = "coreSize", value = "20"),
+                    @HystrixProperty(name = "mazQueueSize", value = "10")
+
             }
     )
     public UserRating getUserRating(@PathVariable("userId") String userId) {
